@@ -1,0 +1,164 @@
+*Tela inicial*
+
+import tkinter as tk
+
+def entrar():
+    email = email_entry.get()
+    senha = senha_entry.get()
+    print("E-mail:", email)
+    print("Senha:", senha)
+
+# Criar a janela
+janela = tk.Tk()
+janela.title("FENIX")
+
+# Criar um rótulo para a frase
+frase_label = tk.Label(janela, text="Ou acesse com o seu email")
+frase_label.pack(pady=5)
+
+# Criar caixas de entrada para e-mail e senha
+email_label = tk.Label(janela, text="E-mail:")
+email_label.pack()
+email_entry = tk.Entry(janela)
+email_entry.pack()
+
+senha_label = tk.Label(janela, text="Senha:")
+senha_label.pack()
+senha_entry = tk.Entry(janela, show="*")
+senha_entry.pack()
+
+# Criar botão para entrar
+botao_entrar = tk.Button(janela, text="Entrar", command=entrar)
+botao_entrar.pack(pady=10)
+
+# Criar botão para criar uma nova conta
+def criar_conta():
+    print("Crie uma nova conta")
+
+botao_nova_conta = tk.Button(janela, text="Crie uma nova conta", command=criar_conta)
+botao_nova_conta.pack()
+
+# Iniciar o loop de eventos
+janela.mainloop()
+
+
+
+
+*Banco de Dados*
+
+import tkinter as tk
+import sqlite3
+
+def entrar():
+    email = email_entry.get()
+    senha = senha_entry.get()
+    if verificar_login(email, senha):
+        print("Login bem-sucedido!")
+    else:
+        print("Login falhou. E-mail ou senha incorretos.")
+
+def verificar_login(email, senha):
+    conexao = sqlite3.connect("banco_de_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT * FROM usuarios WHERE email=? AND senha=?", (email, senha))
+    usuario = cursor.fetchone()
+    conexao.close()
+    return usuario is not None
+
+# Criar a janela
+janela = tk.Tk()
+janela.title("FENIX")
+
+# Criar um rótulo para a frase
+frase_label = tk.Label(janela, text="Ou acesse com o seu email")
+frase_label.pack(pady=5)
+
+# Criar caixas de entrada para e-mail e senha
+email_label = tk.Label(janela, text="E-mail:")
+email_label.pack()
+email_entry = tk.Entry(janela)
+email_entry.pack()
+
+senha_label = tk.Label(janela, text="Senha:")
+senha_label.pack()
+senha_entry = tk.Entry(janela, show="*")
+senha_entry.pack()
+
+# Criar botão para entrar
+botao_entrar = tk.Button(janela, text="Entrar", command=entrar)
+botao_entrar.pack(pady=10)
+
+# Iniciar o loop de eventos
+janela.mainloop()
+
+
+*CRUD*
+
+import tkinter as tk
+import sqlite3
+
+def criar_tabela():
+    conexao = sqlite3.connect("banco_de_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS usuarios (
+                        id INTEGER PRIMARY KEY,
+                        nome TEXT NOT NULL,
+                        email TEXT UNIQUE NOT NULL,
+                        senha TEXT NOT NULL)''')
+    conexao.commit()
+    conexao.close()
+
+def criar_usuario():
+    nome = nome_entry.get()
+    email = email_entry.get()
+    senha = senha_entry.get()
+    conexao = sqlite3.connect("banco_de_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)", (nome, email, senha))
+    conexao.commit()
+    conexao.close()
+    print("Usuário criado com sucesso!")
+
+def listar_usuarios():
+    conexao = sqlite3.connect("banco_de_dados.db")
+    cursor = conexao.cursor()
+    cursor.execute("SELECT * FROM usuarios")
+    usuarios = cursor.fetchall()
+    conexao.close()
+    for usuario in usuarios:
+        print(usuario)
+
+# Criar a janela
+janela = tk.Tk()
+janela.title("FENIX")
+
+# Criar caixas de entrada para inserir dados do usuário
+nome_label = tk.Label(janela, text="Nome:")
+nome_label.pack()
+nome_entry = tk.Entry(janela)
+nome_entry.pack()
+
+email_label = tk.Label(janela, text="E-mail:")
+email_label.pack()
+email_entry = tk.Entry(janela)
+email_entry.pack()
+
+senha_label = tk.Label(janela, text="Senha:")
+senha_label.pack()
+senha_entry = tk.Entry(janela, show="*")
+senha_entry.pack()
+
+# Criar botão para criar um novo usuário
+botao_criar = tk.Button(janela, text="Criar Usuário", command=criar_usuario)
+botao_criar.pack(pady=5)
+
+# Criar botão para listar usuários
+botao_listar = tk.Button(janela, text="Listar Usuários", command=listar_usuarios)
+botao_listar.pack(pady=5)
+
+# Criar a tabela de usuários se não existir
+criar_tabela()
+
+# Iniciar o loop de eventos
+janela.mainloop()
+ 
